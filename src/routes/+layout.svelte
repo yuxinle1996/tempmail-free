@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BackToTop from '$/lib/components/BackToTop.svelte';
 	import Meta from '$/lib/components/Meta.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import Header from '$lib/components/Header.svelte';
@@ -19,3 +20,4 @@
 	<Footer />
 </div>
 <Toaster position="top-center" containerStyle="top: 50px; bottom: 50px" />
+<BackToTop />

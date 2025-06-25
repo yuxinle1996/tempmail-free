@@ -6,7 +6,6 @@
 	import Loading from './Loading.svelte';
 	import Empty from './Empty.svelte';
 	import { send, receive } from '$lib/transition';
-	import BackToTop from './BackToTop.svelte';
 
 	interface Props {
 		/** 邮件列表 */
@@ -19,7 +18,6 @@
 		onSelect: (email: EmailInfo) => void;
 	}
 	let { list, noticeList = [], loading = false, onSelect }: Props = $props();
-
 	let clientWidth = $state(0); // 解决setDataTip不更新问题
 
 	function setDataTip(content: string): Attachment {
@@ -39,7 +37,7 @@
 	{#if list.length === 0 && !loading}
 		<Empty text="暂无邮件" icon="tabler:mail-off" />
 	{/if}
-	<ul class="relative max-h-96 divide-y divide-slate-200 overflow-auto" bind:clientWidth>
+	<ul class="divide-y divide-slate-200" bind:clientWidth>
 		{#each list as item (item.id)}
 			{@const isNotice = noticeList.some((notice) => notice.id === item.id)}
 			<li
@@ -48,7 +46,7 @@
 				animate:flip={{ duration: 200 }}
 			>
 				<button
-					class="-mx-2 flex w-full cursor-pointer items-center gap-4 rounded-md px-2 py-4 transition-colors hover:bg-slate-50"
+					class="flex w-full cursor-pointer items-center gap-4 rounded-md px-2 py-4 transition-colors hover:bg-slate-50"
 					onclick={() => onSelect(item)}
 				>
 					<div
@@ -86,6 +84,5 @@
 				</button>
 			</li>
 		{/each}
-		<BackToTop />
 	</ul>
 </div>

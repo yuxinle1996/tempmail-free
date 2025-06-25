@@ -7,7 +7,9 @@
 </script>
 
 {#if loading}
-	<div class="absolute inset-0 flex items-center justify-center bg-white text-slate-400 opacity-50">
+	<div
+		class="absolute inset-0 z-10 flex items-center justify-center bg-white text-slate-400 opacity-50"
+	>
 		<span class="loading loading-bars loading-md"></span>
 	</div>
 {/if}

@@ -8,6 +8,13 @@ body {
 	font-family: '💪';
 }
 
+html {
+	scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+	display: none !important;
+}
+
 ::selection {
 	background: var(--color-info);
 	color: var(--color-base-100);
@@ -108,6 +115,10 @@ select {
 
 @utility under-animation-* {
 	@apply after:bg-info relative inline-block ease-in-out after:absolute after:-bottom-px after:left-1/2 after:h-[--value([*])] after:w-0 after:transition-[width,left] after:duration-300 hover:after:left-0 hover:after:w-full;
+}
+
+@utility stroke-linecap-round {
+	stroke-linecap: round;
 }
 
 @media (min-width: 640px) and (max-width: 768px) {
