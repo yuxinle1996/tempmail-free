@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Meta from '$/lib/components/Meta.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import '../app.css';
@@ -7,6 +8,7 @@
 	let { children } = $props();
 </script>
 
+<Meta />
 <div class="flex h-screen flex-col">
 	<Header />
 	<main
