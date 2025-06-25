@@ -1,0 +1,121 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+/* @plugin '@tailwindcss/typography'; */
+@plugin "daisyui";
+
+html,
+body {
+	font-family: '💪';
+}
+
+::selection {
+	background: var(--color-info);
+	color: var(--color-base-100);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: '💪';
+	letter-spacing: -0.04em;
+	line-height: 1.4;
+	margin-block: 0.2em;
+	mask-image: url('$assets/Grit Mask@2x.png');
+	mask-repeat: repeat;
+	mask-size: 250px;
+	text-wrap: balance;
+	font-variation-settings:
+		'wght' 700,
+		'ital' 1;
+
+	--opacity: 0;
+
+	&:hover {
+		--opacity: 1;
+	}
+
+	a[href^='#'] {
+		display: inline-block;
+		height: 100%;
+		margin-left: 0.25rem;
+		opacity: var(--opacity);
+
+		&::before {
+			content: '#';
+		}
+	}
+}
+
+@font-face {
+	font-family: '💪';
+	src:
+		url('https://fonts.tolin.ski/fonts/MDIOVariable.woff2') format('woff2'),
+		url('https://fonts.tolin.ski/fonts/MDIOVariable.woff') format('woff'),
+		local('MD IO Variable Regular'),
+		local('MDIOVariable-Regular');
+	font-weight: 100 900;
+	font-style: normal italic;
+}
+
+/* 解决@tailwindcss/forms插件与daisyUI的样式冲突 */
+[type='text'],
+input:where(:not([type])),
+[type='email'],
+[type='url'],
+[type='password'],
+[type='number'],
+[type='date'],
+[type='datetime-local'],
+[type='month'],
+[type='search'],
+[type='tel'],
+[type='time'],
+[type='week'],
+[multiple],
+textarea,
+select {
+	&:focus {
+		box-shadow: none;
+	}
+}
+
+/* 覆盖daisyUI弹框的scrollbar-gutter设置 */
+:root:has(
+		.modal-open,
+		.modal[open],
+		.modal:target,
+		.modal-toggle:checked,
+		.drawer:not(.drawer-open) > .drawer-toggle:checked
+	) {
+	scrollbar-gutter: auto;
+}
+
+:where(.modal[open], .modal-open, .modal-toggle:checked + .modal):not(.modal-start, .modal-end) {
+	scrollbar-gutter: auto;
+}
+
+/* 解决daisyUI与toast样式冲突 */
+.toaster > .wrapper > .base > .indicator > .status {
+	height: auto !important;
+	width: auto !important;
+}
+
+@theme {
+	--animate-spin: spin 1s linear infinite;
+}
+
+@utility under-animation-* {
+	@apply after:bg-info relative inline-block ease-in-out after:absolute after:-bottom-px after:left-1/2 after:h-[--value([*])] after:w-0 after:transition-[width,left] after:duration-300 hover:after:left-0 hover:after:w-full;
+}
+
+@media (min-width: 640px) and (max-width: 768px) {
+	.btn-sm-md-circle {
+		@apply btn-circle; /* 仅在 sm~md 之间应用圆形 */
+	}
+	.hide-sm-md {
+		@apply hidden; /* 仅在 sm~md 之间隐藏文字 */
+	}
+}
