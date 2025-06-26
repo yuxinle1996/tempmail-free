@@ -1,8 +1,13 @@
 <script lang="ts">
 	import Icon, { type IconProps } from '@iconify/svelte';
 	import { onMount } from 'svelte';
+	import type { ClassValue } from 'svelte/elements';
 
 	interface Props {
+		/** 可选：按钮样式 */
+		class?: ClassValue;
+		/** 可选：按钮样式 */
+		style?: string;
 		/** 可选：滚动元素 不传默认为window */
 		scrollElement?: HTMLElement;
 		/** 可选：滚动多少距离后显示按钮 默认100 */
@@ -11,8 +16,19 @@
 		showOnScrollUp?: boolean;
 		/** 可选：图标属性 */
 		iconProps?: Partial<IconProps>;
+		/** 可选：滚动行为 默认smooth */
+		behavior?: 'smooth' | 'instant';
 	}
-	let { scrollElement, scrollDistance = 100, showOnScrollUp = false, iconProps }: Props = $props();
+	let {
+		style,
+		scrollElement,
+		scrollDistance = 100,
+		showOnScrollUp = false,
+		iconProps,
+		behavior = 'smooth',
+		...otherProps
+	}: Props = $props();
+
 	let dasharrayValue = $state(0); // 路径总长度
 	let dashoffsetValue = $state(0); // 路径偏移量
 	let hidden = $state(true);
@@ -27,12 +43,11 @@
 		const target = scrollElement || document.documentElement;
 		target.scrollTo({
 			top: 0,
-			behavior: 'smooth'
+			behavior
 		});
 	}
 
 	function handleScroll() {
-		// 获取当前滚动位置
 		currentScroll = scrollElement
 			? scrollElement.scrollTop
 			: window.scrollY || document.documentElement.scrollTop;
@@ -57,7 +72,6 @@
 						// 只在向上滚动时显示
 						hidden = !(previousScroll - currentScroll > 0);
 					} else {
-						// 超过距离阈值就显示
 						hidden = false;
 					}
 				} else {
@@ -82,8 +96,9 @@
 		if (!buttonRef) return;
 		let progressLine: SVGPathElement | null = buttonRef.querySelector('#back-to-top_progress-line');
 		if (!progressLine) return;
-		dasharrayValue = progressLine.getTotalLength();
-		dashoffsetValue = progressLine.getTotalLength();
+		const totalLength = progressLine.getTotalLength();
+		dasharrayValue = totalLength;
+		dashoffsetValue = totalLength;
 
 		// 根据是否有 scrollElement 添加不同的事件监听
 		if (scrollElement) {
@@ -105,8 +120,12 @@
 
 <button
 	bind:this={buttonRef}
-	class="group right-[var(--backtotop-btn-position)] bottom-[var(--backtotop-btn-position)] z-10 h-auto w-[var(--backtotop-btn-size)] cursor-pointer rounded-full text-center shadow-[10px_10px_30px_0_rgba(0,0,0,0.12)] transition-all"
+	class={[
+		'group right-[var(--backtotop-btn-position)] bottom-[var(--backtotop-btn-position)] z-10 h-auto w-[var(--backtotop-btn-size)] cursor-pointer rounded-full text-center shadow-[10px_10px_30px_0_rgba(0,0,0,0.12)] transition-all',
+		otherProps.class
+	]}
 	aria-label="返回顶部"
+	{style}
 	style:opacity={hidden ? 0 : 1}
 	style:transform={hidden ? 'translateY(10px)' : 'none'}
 	style:pointer-events={hidden ? 'none' : 'auto'}
@@ -128,7 +147,7 @@
 		class="absolute inset-0 -z-[1] flex h-full w-full flex-col items-center justify-center overflow-hidden rounded-full bg-[var(--backtotop-bg-color-default)] group-hover:bg-[var(--backtotop-bg-color)]"
 	>
 		<Icon
-			class="text-info group-hover:text-white"
+			class="text-info right group-hover:text-white"
 			icon="flowbite:angle-top-solid"
 			width="20"
 			height="20"
@@ -140,9 +159,9 @@
 <style>
 	:root {
 		/* 按钮大小 */
-		--backtotop-btn-size: 40px;
+		--backtotop-btn-size: calc(var(--spacing) * 10);
 		/* 按钮距离右下角位置 */
-		--backtotop-btn-position: 30px;
+		--backtotop-btn-position: calc(var(--spacing) * 8);
 		/* 进度条宽度 */
 		--backtotop-progress-width: 5px;
 		/** 背景颜色 */

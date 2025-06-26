@@ -6,6 +6,7 @@
 	import toast from 'svelte-french-toast';
 	import MailList from '$lib/components/MailList.svelte';
 	import ClipboardJS from 'clipboard';
+	import { settings } from '$/lib/store/settings.js';
 
 	const { data } = $props();
 	let resultEmail: string = $state('');
@@ -25,7 +26,6 @@
 	});
 	let noticeMailList: EmailInfo[] = $state([]);
 	let selectedEmail: EmailInfo | null = $state(null);
-	let timeout = $state(10000);
 	let sound: HTMLAudioElement | undefined;
 	let firstId: string = '';
 
@@ -48,7 +48,6 @@
 			resultEmail = info?.email || '';
 			if (info?.token) {
 				Cookie.set('email_token', info.token, {
-					path: '/',
 					expires: 7
 				});
 			}
@@ -145,6 +144,14 @@
 		await getMails();
 	};
 
+	// 取消
+	const cancel = () => {
+		disabled = true;
+		currentName = resultEmail?.split('@')[0] || '';
+		const suffix = resultEmail?.split('@')[1] || '';
+		currentDomain = suffix ? '@' + suffix : '';
+	};
+
 	// 选择邮件
 	const onSelect = (emailInfo: EmailInfo) => {
 		selectedEmail = emailInfo;
@@ -184,20 +191,19 @@
 			return;
 		}
 		Cookie.set('email', resultEmail, {
-			path: '/',
 			expires: 7
 		});
 	});
 
 	// 自动获取邮件
 	$effect(() => {
-		let interval: number;
+		let intervalNum: number;
 		if (isAuto) {
 			getMails();
-			interval = setInterval(getMails, timeout);
+			intervalNum = setInterval(getMails, $settings.interval);
 		}
 		return () => {
-			clearInterval(interval);
+			clearInterval(intervalNum);
 		};
 	});
 
@@ -262,7 +268,7 @@
 	{:else}
 		<div
 			class="tooltip tooltip-top tooltip-info self-stretch"
-			data-tip="自动获取邮件，每10秒获取一次"
+			data-tip="自动获取邮件，每{$settings.interval / 1000}秒获取一次"
 		>
 			<button
 				disabled={!disabled}
@@ -353,7 +359,11 @@
 							{:then domains}
 								<option value="" disabled selected>@邮箱后缀</option>
 								{#if domains.length === 0}
-									<option disabled>(空)</option>
+									{#if currentDomain}
+										<option value={currentDomain} disabled selected>{currentDomain}</option>
+									{:else}
+										<option disabled>(空)</option>
+									{/if}
 								{:else}
 									{#each domains as item (item.domain)}
 										<option value={item.domain}>{item.domain}</option>
@@ -384,7 +394,7 @@
 						</button>
 						<button
 							class="btn btn-error btn-soft sm:btn-circle self-stretch sm:self-auto"
-							onclick={() => (disabled = true)}
+							onclick={cancel}
 						>
 							<span class="sm:hidden">取消</span>
 							<Icon icon="line-md:close" width="16" height="16" />

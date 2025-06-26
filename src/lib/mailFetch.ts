@@ -7,7 +7,7 @@ import { error, type Cookies } from '@sveltejs/kit';
  */
 export async function mailFetch(path: string, cookies: Cookies, options?: RequestInit) {
 	path = path.startsWith('/') ? path : '/' + path;
-	const key = cookies.get('email_api_key');
+	const key = cookies.get('api_key');
 	const headers = {
 		'content-type': 'application/json',
 		'x-rapidapi-key': key || EMAIL_API_KEY,

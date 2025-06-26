@@ -3,11 +3,11 @@ import { mailFetch } from '$lib/mailFetch.js';
 import type { DomainList, EmailCreateInfo } from '$lib/types/server';
 
 export const GET = async () => {
-	error(400, '请传入邮箱地址');
+	error(400, '邮箱不能为空');
 };
 
 export const DELETE = async () => {
-	error(400, '请传入邮箱地址');
+	error(400, '邮箱不能为空');
 };
 
 export const POST = async ({ cookies, request }) => {
