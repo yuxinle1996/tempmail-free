@@ -33,7 +33,10 @@ export const updateSettings = (data: Partial<Settings>) => {
 		});
 		if (value) {
 			const cookieKey = key.replace(/([A-Z])/g, '_$1').toLowerCase();
-			Cookie.set(cookieKey, value.toString());
+			Cookie.set(cookieKey, value.toString(), {
+				path: '/',
+				expires: 365
+			});
 		} else {
 			Cookie.remove(key);
 		}

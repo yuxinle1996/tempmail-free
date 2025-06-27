@@ -48,7 +48,7 @@
 			resultEmail = info?.email || '';
 			if (info?.token) {
 				Cookie.set('email_token', info.token, {
-					expires: 7
+					expires: 30
 				});
 			}
 			toast.success('生成成功: ' + resultEmail);
@@ -191,7 +191,7 @@
 			return;
 		}
 		Cookie.set('email', resultEmail, {
-			expires: 7
+			expires: 30
 		});
 	});
 
